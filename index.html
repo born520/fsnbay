@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Google Sheets Data</title>
+  <style>
+    #data-table {
+      display: none; /* 기본적으로 테이블을 숨깁니다. */
+    }
+  </style>
+</head>
+<body>
+  <div id="login">
+    <h2>비밀번호를 입력하세요:</h2>
+    <input type="password" id="password" placeholder="비밀번호">
+    <button onclick="checkPassword()">확인</button>
+  </div>
+  <table id="data-table"></table>
+  <script src="script.js"></script>
+  <script>
+    function checkPassword() {
+      const passwordInput = document.getElementById('password').value;
+      const correctPassword = '1234'; // 고정된 비밀번호
+
+      if (passwordInput === correctPassword) {
+        document.getElementById('login').style.display = 'none'; // 로그인 폼 숨기기
+        document.getElementById('data-table').style.display = 'table'; // 테이블 표시
+        fetchData(); // 비밀번호가 맞으면 데이터 로드
+      } else {
+        alert('비밀번호가 올바르지 않습니다.');
+      }
+    }
+  </script>
+</body>
+</html>
