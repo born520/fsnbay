@@ -41,7 +41,14 @@ function renderTable(data) {
       const mergeInfo = mergeMap[cellKey];
       if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
         const td = document.createElement('td');
-        td.innerHTML = cellData;
+
+        // 객체인 경우 JSON 문자열로 변환하여 표시
+        if (typeof cellData === 'object') {
+          td.innerHTML = JSON.stringify(cellData);
+        } else {
+          td.innerHTML = cellData;
+        }
+        
         applyStyles(td, rowIndex, colIndex, data);
 
         if (mergeInfo) {
