@@ -1,0 +1,40 @@
+/* styles.css */
+
+/* 기존 스타일 유지 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 0; /* 셀 패딩 제거 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  vertical-align: middle; /* 수직 가운데 정렬 */
+}
+
+.image-container {
+  width: 100%; /* 셀 전체 너비 사용 */
+  height: 0;
+  padding-bottom: 75%; /* 4:3 비율을 유지하기 위한 패딩 */
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 이미지가 셀을 넘지 않고 비율을 유지하도록 */
+  transform: translate(-50%, -50%);
+}
+
+/* 취소선 스타일 */
+.strikethrough {
+  text-decoration: line-through;
+}
