@@ -1,21 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-  fetchData();
-});
-
-async function fetchData() {
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxOIuuOUHq_lSA9ifz5YW8RdEGSlF5_DYzZ5rzgM0PTx09n4JqfGaYvJ8EVUxFOqHdP/exec');
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const result = await response.json();
-    localStorage.setItem('sheetData', JSON.stringify(result));
-    renderTable(result);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-}
-
 function renderTable(data) {
   if (data.error) {
     console.error('Error in data:', data.error);
@@ -36,6 +18,10 @@ function renderTable(data) {
 
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
+    
+    // 행 높이 적용
+    tr.style.height = data.rowHeights[rowIndex] + 'px';
+
     row.forEach((cellData, colIndex) => {
       const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
       const mergeInfo = mergeMap[cellKey];
@@ -44,7 +30,6 @@ function renderTable(data) {
 
         // 객체인 경우 특정 속성을 추출하여 표시
         if (typeof cellData === 'object') {
-          // `text` 속성이 있는 경우 그 값을 사용하고, 없으면 JSON.stringify로 처리
           td.innerHTML = cellData.text || JSON.stringify(cellData);
         } else {
           td.innerHTML = cellData;
@@ -61,23 +46,4 @@ function renderTable(data) {
     });
     table.appendChild(tr);
   });
-}
-
-function applyStyles(td, rowIndex, colIndex, data) {
-  td.style.backgroundColor = data.backgrounds[rowIndex][colIndex] || '';
-  td.style.color = data.fontColors[rowIndex][colIndex] || '';
-  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'left';
-  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'top';
-  td.style.fontWeight = data.fontWeights[rowIndex][colIndex] || 'normal';
-  td.style.fontSize = (data.fontSizes[rowIndex][colIndex] || 12) + 'px';
-
-  if (data.fontStyles[rowIndex][colIndex].includes('strikethrough')) {
-    td.classList.add('strikethrough');
-  }
-
-  applyBorderStyles(td);
-}
-
-function applyBorderStyles(td) {
-  td.style.border = '1px solid black';
 }
