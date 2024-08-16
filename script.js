@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 async function fetchData() {
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbxOIuuOUHq_lSA9ifz5YW8RdEGSlF5_DYzZ5rzgM0PTx09n4JqfGaYvJ8EVUxFOqHdP/exec');
+    const response = await fetch('https://script.google.com/macros/s/AKfycbx7274HIzFMIz7Uf8A8MWEuVoFBdB1mlJ4YiL-A9Uh9BnjySVdiCuzpwMx4HrLu3s32/exec');
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
