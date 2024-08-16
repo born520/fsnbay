@@ -42,7 +42,9 @@ function renderTable(data) {
     const tr = document.createElement('tr');
     
     // 행 높이 적용 (rowHeights가 있을 때만)
-    tr.style.height = rowHeights[rowIndex] ? rowHeights[rowIndex] + 'px' : 'auto';
+    if (rowHeights[rowIndex]) {
+      tr.style.height = rowHeights[rowIndex] + 'px';
+    }
 
     row.forEach((cellData, colIndex) => {
       const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
