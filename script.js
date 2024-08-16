@@ -21,6 +21,7 @@ function renderTable(data) {
     console.error('Error in data:', data.error);
     return;
   }
+
   const table = document.getElementById('data-table');
   table.innerHTML = '';
 
@@ -34,11 +35,14 @@ function renderTable(data) {
     }
   });
 
+  // rowHeights 배열이 없는 경우 기본 높이를 설정
+  const rowHeights = data.rowHeights || [];
+
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
     
-    // 행 높이 적용
-    tr.style.height = data.rowHeights[rowIndex] + 'px';
+    // 행 높이 적용 (rowHeights가 있을 때만)
+    tr.style.height = rowHeights[rowIndex] ? rowHeights[rowIndex] + 'px' : 'auto';
 
     row.forEach((cellData, colIndex) => {
       const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
