@@ -42,9 +42,10 @@ function renderTable(data) {
       if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
         const td = document.createElement('td');
 
-        // 객체인 경우 JSON 문자열로 변환하여 표시
+        // 객체인 경우 특정 속성을 추출하여 표시
         if (typeof cellData === 'object') {
-          td.innerHTML = JSON.stringify(cellData);
+          // `text` 속성이 있는 경우 그 값을 사용하고, 없으면 JSON.stringify로 처리
+          td.innerHTML = cellData.text || JSON.stringify(cellData);
         } else {
           td.innerHTML = cellData;
         }
