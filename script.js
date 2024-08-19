@@ -47,7 +47,7 @@ function renderTable(data, isUpdate) {
   const mergeMap = {};
   data.mergedCells.forEach(cell => {
     for (let i = 0; i < cell.numRows; i++) {
-      for (let j = 0; j < cell.numColumns; j++) {
+      for (let j = 0; i < cell.numColumns; j++) {
         const key = `${cell.row + i}-${cell.column + j}`;
         mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
       }
