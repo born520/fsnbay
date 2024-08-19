@@ -31,6 +31,13 @@ function renderTable(data) {
     row.forEach((cellData, colIndex) => {
       const td = document.createElement('td');
       td.innerHTML = cellData.text || ''; // 셀 내용 채우기
+
+      if (data.columnWidths && data.columnWidths[colIndex]) {
+        td.style.width = data.columnWidths[colIndex] + 'px'; // 원본 스프레드시트의 너비 반영
+      } else {
+        td.style.width = 'auto'; // 자동 너비 설정
+      }
+
       tr.appendChild(td);
     });
 
