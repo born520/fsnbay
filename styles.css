@@ -1,8 +1,8 @@
 /* 기본 테이블 스타일 */
 table {
   width: 100%; /* 큰 화면에서 테이블이 화면을 꽉 채우도록 설정 */
-  table-layout: auto; /* 기본 설정은 auto로 하여 너비를 자동으로 조정 */
   border-collapse: collapse;
+  table-layout: auto; /* 테이블 레이아웃을 자동으로 설정 */
 }
 
 th, td {
@@ -15,40 +15,36 @@ th, td {
 
 /* 큰 화면용 스타일 */
 @media (min-width: 1024px) {
-  table {
-    table-layout: fixed; /* 큰 화면에서는 셀 너비를 고정하여 레이아웃이 안정적으로 보이도록 설정 */
-  }
-
   th, td {
-    font-size: 1em; /* 큰 화면에서는 글자 크기를 기본으로 설정 */
-    padding: 12px; /* 큰 화면에서는 패딩을 넉넉하게 설정 */
+    font-size: 1em; /* 큰 화면에서는 기본 글자 크기 */
+    padding: 12px; /* 큰 화면에서는 넉넉한 패딩 */
   }
 }
 
 /* 작은 화면용 스타일 */
 @media (max-width: 768px) {
   th, td {
-    font-size: 0.9em; /* 작은 화면에서는 글자 크기를 줄임 */
-    padding: 8px; /* 패딩을 줄여서 공간 확보 */
+    font-size: 0.9em; /* 작은 화면에서는 글자 크기 축소 */
+    padding: 8px; /* 작은 패딩 적용 */
   }
 }
 
 @media (max-width: 480px) {
   th, td {
-    font-size: 0.8em; /* 더 작은 화면에서는 글자 크기를 더 줄임 */
-    padding: 6px; /* 패딩을 더 줄임 */
+    font-size: 0.8em; /* 더 작은 화면에서는 글자 크기 더 축소 */
+    padding: 6px; /* 더 작은 패딩 적용 */
   }
 
   table {
-    width: 100%; /* 작은 화면에서도 테이블이 화면에 맞도록 유지 */
+    width: 100%; /* 작은 화면에서도 테이블이 화면을 꽉 채우도록 유지 */
   }
 
   th.hide-on-mobile, td.hide-on-mobile {
-    display: none; /* 모바일에서는 특정 열을 숨길 수 있음 */
+    display: none; /* 모바일에서 특정 열 숨기기 */
   }
 }
 
-/* 세로 스크롤이 가능하도록 설정 (작은 화면에서 테이블이 너무 넓을 때) */
+/* 테이블이 너무 넓을 때 세로 스크롤 가능하도록 설정 */
 table {
   overflow-x: auto;
   display: block;
