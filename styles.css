@@ -2,6 +2,7 @@
 table {
   border-collapse: collapse;
   width: 100%;
+  table-layout: fixed; /* 셀 너비를 고정시키는 속성 추가 */
 }
 
 table, th, td {
