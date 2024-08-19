@@ -1,6 +1,5 @@
 async function fetchData() {
   try {
-    // 로컬 저장소에서 이전 데이터를 불러옴
     const cachedData = localStorage.getItem('cachedTableData');
     if (cachedData) {
       renderTable(JSON.parse(cachedData), false);
@@ -13,7 +12,6 @@ async function fetchData() {
 
     const result = await response.json();
     
-    // 데이터가 변경된 경우에만 업데이트
     const oldHash = localStorage.getItem('dataHash');
     const newHash = hashData(result.tableData);
 
@@ -28,7 +26,6 @@ async function fetchData() {
 }
 
 function hashData(data) {
-  // 간단한 해시 생성 (여기서는 JSON 문자열의 길이를 해시로 사용)
   return JSON.stringify(data).length;
 }
 
@@ -40,7 +37,7 @@ function renderTable(data, isUpdate) {
 
   if (isUpdate) {
     const table = document.getElementById('data-table');
-    table.innerHTML = ''; // 업데이트 시 기존 테이블 초기화
+    table.innerHTML = '';
   }
 
   const fragment = document.createDocumentFragment();
@@ -56,90 +53,48 @@ function renderTable(data, isUpdate) {
     }
   });
 
-  if (columnWidths.length > 0) {
-    const totalWidth = columnWidths.reduce((acc, width) => acc + width, 0);
-    const columnWidthPercentages = columnWidths.map(width => (width / totalWidth) * 100);
+  data.tableData.forEach((row, rowIndex) => {
+    const tr = document.createElement('tr');
 
-    data.tableData.forEach((row, rowIndex) => {
-      const tr = document.createElement('tr');
+    if (data.rowHeights && data.rowHeights[rowIndex]) {
+      tr.style.height = data.rowHeights[rowIndex] + 'px';
+    }
 
-      if (data.rowHeights && data.rowHeights[rowIndex]) {
-        tr.style.height = data.rowHeights[rowIndex] + 'px';
-      }
+    row.forEach((cellData, colIndex) => {
+      const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
+      const mergeInfo = mergeMap[cellKey];
 
-      row.forEach((cellData, colIndex) => {
-        const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
-        const mergeInfo = mergeMap[cellKey];
+      if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
+        const td = document.createElement('td');
 
-        if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
-          const td = document.createElement('td');
-
-          if (typeof cellData === 'object') {
-            td.innerHTML = cellData.richText || cellData.text || '';
-          } else {
-            td.innerHTML = cellData;
-          }
-
-          applyStyles(td, rowIndex, colIndex, data);
-
-          if (columnWidthPercentages[colIndex]) {
-            td.style.width = columnWidthPercentages[colIndex] + '%';
-          }
-
-          if (mergeInfo) {
-            const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
-            if (mergedCell) {
-              td.rowSpan = mergedCell.numRows;
-              td.colSpan = mergedCell.numColumns;
-            }
-          }
-
-          td.style.whiteSpace = 'pre-wrap';
-          tr.appendChild(td);
+        if (typeof cellData === 'object') {
+          td.innerHTML = cellData.richText || cellData.text || '';
+        } else {
+          td.innerHTML = cellData;
         }
-      });
 
-      fragment.appendChild(tr);
-    });
-  } else {
-    data.tableData.forEach((row, rowIndex) => {
-      const tr = document.createElement('tr');
+        applyStyles(td, rowIndex, colIndex, data);
 
-      if (data.rowHeights && data.rowHeights[rowIndex]) {
-        tr.style.height = data.rowHeights[rowIndex] + 'px';
-      }
-
-      row.forEach((cellData, colIndex) => {
-        const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
-        const mergeInfo = mergeMap[cellKey];
-
-        if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
-          const td = document.createElement('td');
-
-          if (typeof cellData === 'object') {
-            td.innerHTML = cellData.richText || cellData.text || '';
-          } else {
-            td.innerHTML = cellData;
-          }
-
-          applyStyles(td, rowIndex, colIndex, data);
-
-          if (mergeInfo) {
-            const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
-            if (mergedCell) {
-              td.rowSpan = mergedCell.numRows;
-              td.colSpan = mergedCell.numColumns;
-            }
-          }
-
-          td.style.whiteSpace = 'pre-wrap';
-          tr.appendChild(td);
+        // 픽셀 단위로 너비 설정
+        if (columnWidths[colIndex]) {
+          td.style.width = columnWidths[colIndex] + 'px';
         }
-      });
 
-      fragment.appendChild(tr);
+        if (mergeInfo) {
+          const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
+          if (mergedCell) {
+            td.rowSpan = mergedCell.numRows;
+            td.colSpan = mergedCell.numColumns;
+          }
+        }
+
+        td.style.whiteSpace = 'pre-wrap';
+        tr.appendChild(td);
+      }
     });
-  }
+
+    fragment.appendChild(tr);
+  });
 
   document.getElementById('data-table').appendChild(fragment);
 }
