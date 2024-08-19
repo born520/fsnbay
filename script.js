@@ -6,12 +6,12 @@ async function fetchData() {
       renderTable(JSON.parse(cachedData), false); // 캐시된 데이터를 먼저 렌더링
     }
 
-    // 요청에 타임아웃 설정 (20초 후 요청 중단)
+    // 요청에 타임아웃 설정 (30초 후 요청 중단)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       controller.abort();
-      console.error('Request timed out after 20 seconds');
-    }, 20000); // 20초로 타임아웃 시간 연장
+      console.error('Request timed out after 30 seconds');
+    }, 30000); // 30초로 타임아웃 시간 연장
 
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec', {
       signal: controller.signal
