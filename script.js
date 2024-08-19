@@ -2,12 +2,16 @@ async function fetchData() {
   try {
     const cachedData = localStorage.getItem('cachedTableData');
     if (cachedData) {
+      console.log('Using cached data');
       renderTable(JSON.parse(cachedData), false); // 캐시된 데이터를 먼저 렌더링
     }
 
-    // 요청에 타임아웃 설정 (10초 후 요청 중단)
+    // 요청에 타임아웃 설정 (20초 후 요청 중단)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 후 타임아웃
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+      console.error('Request timed out after 20 seconds');
+    }, 20000); // 20초로 타임아웃 시간 연장
 
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec', {
       signal: controller.signal
@@ -20,6 +24,7 @@ async function fetchData() {
     }
 
     const result = await response.json();
+    console.log('Data fetched successfully');
 
     const oldHash = localStorage.getItem('dataHash');
     const newHash = hashData(result.tableData);
@@ -28,6 +33,7 @@ async function fetchData() {
       renderTable(result, true);
       localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
       localStorage.setItem('dataHash', newHash); // 데이터 해시값 저장
+      console.log('New data rendered and cached');
     }
   } catch (error) {
     console.error('Error fetching data:', error);
