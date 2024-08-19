@@ -1,9 +1,16 @@
-/* 기본 테이블 스타일 */
+/* 부모 컨테이너가 화면 전체 너비를 사용하도록 설정 */
+body, html {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* 테이블을 중앙에 배치하고, 화면 전체 너비를 사용하도록 설정 */
 table {
-  width: 100%; /* 테이블이 화면을 꽉 채우도록 설정 */
+  width: 100%;
   border-collapse: collapse;
   table-layout: fixed; /* 셀 너비를 일정하게 유지 */
-  margin: 0 auto; /* 테이블을 화면 중앙에 배치 */
+  margin: 0 auto; /* 테이블이 중앙에 배치되도록 설정 */
 }
 
 th, td {
@@ -12,7 +19,7 @@ th, td {
   overflow: hidden;
   text-align: center;
   vertical-align: middle;
-  padding: 12px; /* 기본 패딩 설정 */
+  padding: 12px;
   font-size: 1em; /* 기본 글자 크기 */
 }
 
