@@ -20,65 +20,59 @@ function renderTable(data) {
   const table = document.getElementById('data-table');
   table.innerHTML = '';
 
-  // columnWidths가 정의되지 않았을 경우 기본값을 설정
   const columnWidths = data.columnWidths || [];
   
   if (columnWidths.length > 0) {
     const totalWidth = columnWidths.reduce((acc, width) => acc + width, 0);
-    const columnWidthPercentages = columnWidths.map(width => (width / totalWidth) * 100); // 비율로 변환
-  
+    const columnWidthPercentages = columnWidths.map(width => (width / totalWidth) * 100);
+
     data.tableData.forEach((row, rowIndex) => {
       const tr = document.createElement('tr');
-    
-      // 행 높이 적용
+
       if (data.rowHeights && data.rowHeights[rowIndex]) {
         tr.style.height = data.rowHeights[rowIndex] + 'px';
       }
-  
+
       row.forEach((cellData, colIndex) => {
         const td = document.createElement('td');
-  
+
         if (typeof cellData === 'object') {
-          td.innerHTML = cellData.text || JSON.stringify(cellData);
+          // JSON 형식으로 표시되지 않도록 데이터의 텍스트 값을 추출하여 표시
+          td.innerHTML = cellData.richText || cellData.text || '';
         } else {
           td.innerHTML = cellData;
         }
-  
+
         applyStyles(td, rowIndex, colIndex, data);
-  
-        // 열 너비 비율 적용
+
         if (columnWidthPercentages[colIndex]) {
           td.style.width = columnWidthPercentages[colIndex] + '%';
         }
-  
-        // 텍스트 줄 바꿈 허용
+
         td.style.whiteSpace = 'pre-wrap';
         tr.appendChild(td);
       });
       table.appendChild(tr);
     });
   } else {
-    // 열 너비 데이터가 없는 경우 기본적으로 테이블을 표시
     data.tableData.forEach((row, rowIndex) => {
       const tr = document.createElement('tr');
-  
-      // 행 높이 적용
+
       if (data.rowHeights && data.rowHeights[rowIndex]) {
         tr.style.height = data.rowHeights[rowIndex] + 'px';
       }
-  
+
       row.forEach((cellData, colIndex) => {
         const td = document.createElement('td');
-  
+
         if (typeof cellData === 'object') {
-          td.innerHTML = cellData.text || JSON.stringify(cellData);
+          td.innerHTML = cellData.richText || cellData.text || '';
         } else {
           td.innerHTML = cellData;
         }
-  
+
         applyStyles(td, rowIndex, colIndex, data);
-  
-        // 텍스트 줄 바꿈 허용
+
         td.style.whiteSpace = 'pre-wrap';
         tr.appendChild(td);
       });
