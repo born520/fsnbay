@@ -1,7 +1,10 @@
 async function fetchData() {
   try {
     // GitHub에서 초기 JSON 데이터 가져오기
-    const initialDataResponse = await fetch('https://raw.githubusercontent.com/your-username/your-repo/main/initial_data.json');
+    const initialDataResponse = await fetch('https://raw.githubusercontent.com/born520/fsnbay/main/initial_data.json');
+    if (!initialDataResponse.ok) {
+      throw new Error('Failed to load initial data');
+    }
     const initialData = await initialDataResponse.json();
     console.log('Initial data loaded from GitHub');
     renderTable(initialData, true);
@@ -38,84 +41,3 @@ async function fetchData() {
     }
   }
 }
-
-function renderTable(data, isUpdate) {
-  if (data.error) {
-    console.error('Error in data:', data.error);
-    document.getElementById('data-table').innerHTML = "<tr><td>Error in data</td></tr>";
-    return;
-  }
-
-  if (isUpdate) {
-    const table = document.getElementById('data-table');
-    table.innerHTML = ''; // 기존 테이블 내용 지우기
-  }
-
-  const fragment = document.createDocumentFragment();
-  const columnWidths = data.columnWidths || [];
-
-  const mergeMap = {};
-  data.mergedCells.forEach(cell => {
-    for (let i = 0; i < cell.numRows; i++) {
-      for (let j = 0; j < cell.numColumns; j++) {
-        const key = `${cell.row + i}-${cell.column + j}`;
-        mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
-      }
-    }
-  });
-
-  data.tableData.forEach((row, rowIndex) => {
-    const tr = document.createElement('tr');
-
-    if (data.rowHeights && data.rowHeights[rowIndex]) {
-      tr.style.height = data.rowHeights[rowIndex] + 'px';
-    }
-
-    row.forEach((cellData, colIndex) => {
-      const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
-      const mergeInfo = mergeMap[cellKey];
-
-      if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
-        const td = document.createElement('td');
-
-        if (typeof cellData === 'object') {
-          td.innerHTML = cellData.richText || cellData.text || '';
-        } else {
-          td.innerHTML = cellData;
-        }
-
-        applyStyles(td, rowIndex, colIndex, data);
-
-        if (data.columnWidths && data.columnWidths[colIndex]) {
-          td.style.width = data.columnWidths[colIndex] + 'px';
-        }
-
-        if (mergeInfo) {
-          const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
-          if (mergedCell) {
-            td.rowSpan = mergedCell.numRows;
-            td.colSpan = mergedCell.numColumns;
-          }
-        }
-
-        tr.appendChild(td);
-      }
-    });
-
-    fragment.appendChild(tr);
-  });
-
-  document.getElementById('data-table').appendChild(fragment);
-}
-
-function applyStyles(td, rowIndex, colIndex, data) {
-  td.style.backgroundColor = data.backgrounds[rowIndex][colIndex] || '';
-  td.style.color = data.fontColors[rowIndex][colIndex] || '';
-  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'center';
-  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'middle';
-  td.style.fontWeight = data.fontWeights[rowIndex][colIndex] || 'normal';
-  td.style.fontSize = (data.fontSizes[rowIndex][colIndex] || 12) + 'px';
-}
-
-// 페이지가 로드될 때 데이터를 가져옴
-document.addEventListener('DOMContentLoaded', fetchData);
