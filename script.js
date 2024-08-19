@@ -32,10 +32,21 @@ function renderTable(data) {
       const td = document.createElement('td');
       td.innerHTML = cellData.text || ''; // 셀 내용 채우기
 
+      // 원본 스프레드시트의 셀 너비와 기타 스타일 반영
       if (data.columnWidths && data.columnWidths[colIndex]) {
-        td.style.width = data.columnWidths[colIndex] + 'px'; // 원본 스프레드시트의 너비 반영
-      } else {
-        td.style.width = 'auto'; // 자동 너비 설정
+        td.style.width = data.columnWidths[colIndex] + 'px'; // 셀 너비 설정
+      }
+
+      if (data.fontSizes && data.fontSizes[rowIndex] && data.fontSizes[rowIndex][colIndex]) {
+        td.style.fontSize = data.fontSizes[rowIndex][colIndex] + 'px'; // 글자 크기 설정
+      }
+
+      if (data.fontColors && data.fontColors[rowIndex] && data.fontColors[rowIndex][colIndex]) {
+        td.style.color = data.fontColors[rowIndex][colIndex]; // 글자 색상 설정
+      }
+
+      if (data.backgroundColors && data.backgroundColors[rowIndex] && data.backgroundColors[rowIndex][colIndex]) {
+        td.style.backgroundColor = data.backgroundColors[rowIndex][colIndex]; // 배경 색상 설정
       }
 
       tr.appendChild(td);
