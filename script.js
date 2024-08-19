@@ -21,6 +21,16 @@ function renderTable(data) {
   table.innerHTML = '';
 
   const columnWidths = data.columnWidths || [];
+
+  const mergeMap = {};
+  data.mergedCells.forEach(cell => {
+    for (let i = 0; i < cell.numRows; i++) {
+      for (let j = 0; j < cell.numColumns; j++) {
+        const key = `${cell.row + i}-${cell.column + j}`;
+        mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
+      }
+    }
+  });
   
   if (columnWidths.length > 0) {
     const totalWidth = columnWidths.reduce((acc, width) => acc + width, 0);
@@ -34,23 +44,35 @@ function renderTable(data) {
       }
 
       row.forEach((cellData, colIndex) => {
-        const td = document.createElement('td');
+        const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
+        const mergeInfo = mergeMap[cellKey];
 
-        if (typeof cellData === 'object') {
-          // JSON 형식으로 표시되지 않도록 데이터의 텍스트 값을 추출하여 표시
-          td.innerHTML = cellData.richText || cellData.text || '';
-        } else {
-          td.innerHTML = cellData;
+        if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
+          const td = document.createElement('td');
+
+          if (typeof cellData === 'object') {
+            td.innerHTML = cellData.richText || cellData.text || '';
+          } else {
+            td.innerHTML = cellData;
+          }
+
+          applyStyles(td, rowIndex, colIndex, data);
+
+          if (columnWidthPercentages[colIndex]) {
+            td.style.width = columnWidthPercentages[colIndex] + '%';
+          }
+
+          if (mergeInfo) {
+            const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
+            if (mergedCell) {
+              td.rowSpan = mergedCell.numRows;
+              td.colSpan = mergedCell.numColumns;
+            }
+          }
+
+          td.style.whiteSpace = 'pre-wrap';
+          tr.appendChild(td);
         }
-
-        applyStyles(td, rowIndex, colIndex, data);
-
-        if (columnWidthPercentages[colIndex]) {
-          td.style.width = columnWidthPercentages[colIndex] + '%';
-        }
-
-        td.style.whiteSpace = 'pre-wrap';
-        tr.appendChild(td);
       });
       table.appendChild(tr);
     });
@@ -63,18 +85,31 @@ function renderTable(data) {
       }
 
       row.forEach((cellData, colIndex) => {
-        const td = document.createElement('td');
+        const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
+        const mergeInfo = mergeMap[cellKey];
 
-        if (typeof cellData === 'object') {
-          td.innerHTML = cellData.richText || cellData.text || '';
-        } else {
-          td.innerHTML = cellData;
+        if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
+          const td = document.createElement('td');
+
+          if (typeof cellData === 'object') {
+            td.innerHTML = cellData.richText || cellData.text || '';
+          } else {
+            td.innerHTML = cellData;
+          }
+
+          applyStyles(td, rowIndex, colIndex, data);
+
+          if (mergeInfo) {
+            const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
+            if (mergedCell) {
+              td.rowSpan = mergedCell.numRows;
+              td.colSpan = mergedCell.numColumns;
+            }
+          }
+
+          td.style.whiteSpace = 'pre-wrap';
+          tr.appendChild(td);
         }
-
-        applyStyles(td, rowIndex, colIndex, data);
-
-        td.style.whiteSpace = 'pre-wrap';
-        tr.appendChild(td);
       });
       table.appendChild(tr);
     });
