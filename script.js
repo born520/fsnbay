@@ -26,8 +26,8 @@ async function fetchData() {
     const result = await response.json();
     console.log('Data fetched successfully');
 
-    // 중요한 데이터만 먼저 렌더링
-    renderPartialTable(result);
+    // 중요한 데이터(2줄)만 먼저 렌더링
+    renderPartialTable(result, 2);
 
     // 나머지 데이터를 비동기적으로 로드
     setTimeout(() => {
@@ -46,13 +46,13 @@ async function fetchData() {
   }
 }
 
-function renderPartialTable(data) {
+function renderPartialTable(data, numRows) {
   const table = document.getElementById('data-table');
   table.innerHTML = ''; // 기존 테이블 내용 지우기
 
-  // 중요한 데이터만 렌더링 (예: 첫 10개 행)
+  // 중요한 데이터만 렌더링 (예: 첫 2개 행)
   const fragment = document.createDocumentFragment();
-  for (let i = 0; i < Math.min(10, data.tableData.length); i++) {
+  for (let i = 0; i < Math.min(numRows, data.tableData.length); i++) {
     const tr = document.createElement('tr');
     data.tableData[i].forEach(cellData => {
       const td = document.createElement('td');
