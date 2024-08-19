@@ -9,7 +9,7 @@ body, html {
 table {
   width: 100%; /* 테이블이 화면을 꽉 채우도록 설정 */
   border-collapse: collapse; /* 테이블 경계선을 겹치도록 설정 */
-  table-layout: fixed; /* 셀 너비를 일정하게 유지 */
+  table-layout: auto; /* 셀 너비를 콘텐츠에 맞게 자동 조정 */
   margin: 0 auto; /* 테이블을 화면 중앙에 배치 */
 }
 
@@ -27,11 +27,7 @@ th, td {
 @media (min-width: 1024px) {
   table {
     width: 100%; /* 큰 화면에서 테이블이 화면을 꽉 채우도록 설정 */
-  }
-
-  th, td {
-    padding: 16px; /* 더 큰 패딩으로 셀 간 간격을 늘림 */
-    font-size: 1.1em; /* 큰 화면에서 글자 크기를 약간 키움 */
+    table-layout: fixed; /* 셀 너비를 일정하게 유지 */
   }
 }
 
