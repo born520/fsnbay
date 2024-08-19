@@ -3,8 +3,6 @@ body, html {
   width: 100%;
   margin: 0;
   padding: 0;
-  color: black; /* 기본 텍스트 색상 */
-  background-color: white; /* 기본 배경 색상 */
 }
 
 /* 테이블 스타일 */
@@ -13,8 +11,6 @@ table {
   border-collapse: collapse; /* 테이블 경계선을 겹치도록 설정 */
   table-layout: fixed; /* 셀 너비를 일정하게 유지 */
   margin: 0 auto; /* 테이블을 화면 중앙에 배치 */
-  color: black; /* 테이블 텍스트 색상 */
-  background-color: white; /* 테이블 배경 색상 */
 }
 
 th, td {
@@ -25,6 +21,25 @@ th, td {
   vertical-align: middle; /* 텍스트를 세로로 가운데 정렬 */
   padding: 12px; /* 셀 안쪽 여백 */
   font-size: 1em; /* 글자 크기 */
-  color: black; /* 셀 텍스트 색상 */
-  background-color: white; /* 셀 배경 색상 */
+}
+
+/* 테이블이 너무 넓을 때 가로 스크롤 가능하도록 설정 */
+table {
+  overflow-x: auto;
+  display: block;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+  th, td {
+    font-size: 0.9em; /* 작은 화면에서 글자 크기 줄임 */
+    padding: 8px; /* 작은 패딩 */
+  }
+}
+
+@media (max-width: 480px) {
+  th, td {
+    font-size: 0.8em; /* 더 작은 화면에서 글자 크기 줄임 */
+    padding: 6px; /* 더 작은 패딩 */
+  }
 }
