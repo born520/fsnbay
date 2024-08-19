@@ -7,15 +7,9 @@
   <title>Google Sheets Data</title>
 </head>
 <body>
-  <table id="data-table"></table>
-  
-  <!-- script.js를 로드하여 fetchData 함수가 사용 가능하도록 함 -->
+  <div style="width: 100%; margin: 0 auto;"> <!-- 테이블을 감싸는 컨테이너가 화면 전체를 사용 -->
+    <table id="data-table"></table>
+  </div>
   <script src="script.js"></script>
-  
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      fetchData(); // 페이지가 로드될 때 데이터를 불러옴
-    });
-  </script>
 </body>
 </html>
