@@ -1,7 +1,7 @@
 /* 기본 테이블 스타일 */
 table {
-  width: 100%;
-  table-layout: fixed;
+  width: 100%; /* 큰 화면에서 테이블이 화면을 꽉 채우도록 설정 */
+  table-layout: auto; /* 기본 설정은 auto로 하여 너비를 자동으로 조정 */
   border-collapse: collapse;
 }
 
@@ -13,7 +13,19 @@ th, td {
   vertical-align: middle;
 }
 
-/* 반응형 디자인: 작은 화면용 스타일 */
+/* 큰 화면용 스타일 */
+@media (min-width: 1024px) {
+  table {
+    table-layout: fixed; /* 큰 화면에서는 셀 너비를 고정하여 레이아웃이 안정적으로 보이도록 설정 */
+  }
+
+  th, td {
+    font-size: 1em; /* 큰 화면에서는 글자 크기를 기본으로 설정 */
+    padding: 12px; /* 큰 화면에서는 패딩을 넉넉하게 설정 */
+  }
+}
+
+/* 작은 화면용 스타일 */
 @media (max-width: 768px) {
   th, td {
     font-size: 0.9em; /* 작은 화면에서는 글자 크기를 줄임 */
@@ -27,12 +39,10 @@ th, td {
     padding: 6px; /* 패딩을 더 줄임 */
   }
 
-  /* 테이블 자체의 너비를 넘지 않도록 설정 */
   table {
-    width: 100%;
+    width: 100%; /* 작은 화면에서도 테이블이 화면에 맞도록 유지 */
   }
-  
-  /* 특정 요소를 숨길 수 있는 옵션 */
+
   th.hide-on-mobile, td.hide-on-mobile {
     display: none; /* 모바일에서는 특정 열을 숨길 수 있음 */
   }
