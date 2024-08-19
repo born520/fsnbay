@@ -1,30 +1,45 @@
-/* 테이블과 셀의 기본 스타일 */
+/* 기본 테이블 스타일 */
 table {
-  border-collapse: collapse;
   width: 100%;
-  table-layout: fixed; /* 셀 너비를 고정시키는 속성 추가 */
-}
-
-table, th, td {
-  border: 1px solid black;
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
 th, td {
-  padding: 0;
+  border: 1px solid black;
+  white-space: pre-wrap;
+  overflow: hidden;
   text-align: center;
   vertical-align: middle;
-  white-space: pre-wrap; /* 텍스트 줄 바꿈 허용 */
 }
 
-/* 반응형 디자인을 위한 추가 스타일 */
+/* 반응형 디자인: 작은 화면용 스타일 */
 @media (max-width: 768px) {
   th, td {
     font-size: 0.9em; /* 작은 화면에서는 글자 크기를 줄임 */
+    padding: 8px; /* 패딩을 줄여서 공간 확보 */
   }
 }
 
 @media (max-width: 480px) {
   th, td {
     font-size: 0.8em; /* 더 작은 화면에서는 글자 크기를 더 줄임 */
+    padding: 6px; /* 패딩을 더 줄임 */
   }
+
+  /* 테이블 자체의 너비를 넘지 않도록 설정 */
+  table {
+    width: 100%;
+  }
+  
+  /* 특정 요소를 숨길 수 있는 옵션 */
+  th.hide-on-mobile, td.hide-on-mobile {
+    display: none; /* 모바일에서는 특정 열을 숨길 수 있음 */
+  }
+}
+
+/* 세로 스크롤이 가능하도록 설정 (작은 화면에서 테이블이 너무 넓을 때) */
+table {
+  overflow-x: auto;
+  display: block;
 }
