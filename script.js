@@ -5,7 +5,16 @@ async function fetchData() {
       renderTable(JSON.parse(cachedData), false); // 캐시된 데이터를 먼저 렌더링
     }
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
+    // 요청에 타임아웃 설정 (10초 후 요청 중단)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10초 후 타임아웃
+
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec', {
+      signal: controller.signal
+    });
+
+    clearTimeout(timeoutId); // 요청이 완료되면 타임아웃 제거
+
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -22,6 +31,11 @@ async function fetchData() {
     }
   } catch (error) {
     console.error('Error fetching data:', error);
+    if (error.name === 'AbortError') {
+      document.getElementById('data-table').innerHTML = "<tr><td>Request timed out. Please try again later.</td></tr>";
+    } else {
+      document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
+    }
   }
 }
 
@@ -47,7 +61,7 @@ function renderTable(data, isUpdate) {
   const mergeMap = {};
   data.mergedCells.forEach(cell => {
     for (let i = 0; i < cell.numRows; i++) {
-      for (let j = 0; i < cell.numColumns; j++) {
+      for (let j = 0; j < cell.numColumns; j++) {
         const key = `${cell.row + i}-${cell.column + j}`;
         mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
       }
