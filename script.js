@@ -20,55 +20,34 @@ function renderTable(data) {
   const table = document.getElementById('data-table');
   table.innerHTML = '';
 
-  const mergeMap = {};
-  data.mergedCells.forEach(cell => {
-    for (let i = 0; i < cell.numRows; i++) {
-      for (let j = 0; j < cell.numColumns; j++) {
-        const key = `${cell.row + i}-${cell.column + j}`;
-        mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
-      }
-    }
-  });
-
-  const rowHeights = data.rowHeights || [];
-  const columnWidths = data.columnWidths || [];
+  const totalWidth = data.columnWidths.reduce((acc, width) => acc + width, 0);
+  const columnWidths = data.columnWidths.map(width => (width / totalWidth) * 100); // 비율로 변환
 
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
     
     // 행 높이 적용
-    if (rowHeights[rowIndex]) {
-      tr.style.height = rowHeights[rowIndex] + 'px';
+    if (data.rowHeights[rowIndex]) {
+      tr.style.height = data.rowHeights[rowIndex] + 'px';
     }
 
     row.forEach((cellData, colIndex) => {
-      const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
-      const mergeInfo = mergeMap[cellKey];
-      if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
-        const td = document.createElement('td');
+      const td = document.createElement('td');
 
-        if (typeof cellData === 'object') {
-          td.innerHTML = cellData.text || JSON.stringify(cellData);
-        } else {
-          td.innerHTML = cellData;
-        }
-
-        applyStyles(td, rowIndex, colIndex, data);
-
-        // 열 너비 적용
-        if (columnWidths[colIndex]) {
-          td.style.width = columnWidths[colIndex] + 'px';
-        }
-
-        if (mergeInfo) {
-          td.rowSpan = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn).numRows;
-          td.colSpan = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn).numColumns;
-        }
-
-        // 텍스트 줄 바꿈 허용
-        td.style.whiteSpace = 'pre-wrap';
-        tr.appendChild(td);
+      if (typeof cellData === 'object') {
+        td.innerHTML = cellData.text || JSON.stringify(cellData);
+      } else {
+        td.innerHTML = cellData;
       }
+
+      applyStyles(td, rowIndex, colIndex, data);
+
+      // 열 너비 비율 적용
+      td.style.width = columnWidths[colIndex] + '%';
+
+      // 텍스트 줄 바꿈 허용
+      td.style.whiteSpace = 'pre-wrap';
+      tr.appendChild(td);
     });
     table.appendChild(tr);
   });
