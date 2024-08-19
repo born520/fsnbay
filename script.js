@@ -1,3 +1,16 @@
+async function fetchData() {
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const result = await response.json();
+    renderTable(result);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
 function renderTable(data) {
   if (data.error) {
     console.error('Error in data:', data.error);
