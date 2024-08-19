@@ -20,37 +20,71 @@ function renderTable(data) {
   const table = document.getElementById('data-table');
   table.innerHTML = '';
 
-  const totalWidth = data.columnWidths.reduce((acc, width) => acc + width, 0);
-  const columnWidths = data.columnWidths.map(width => (width / totalWidth) * 100); // 비율로 변환
-
-  data.tableData.forEach((row, rowIndex) => {
-    const tr = document.createElement('tr');
+  // columnWidths가 정의되지 않았을 경우 기본값을 설정
+  const columnWidths = data.columnWidths || [];
+  
+  if (columnWidths.length > 0) {
+    const totalWidth = columnWidths.reduce((acc, width) => acc + width, 0);
+    const columnWidthPercentages = columnWidths.map(width => (width / totalWidth) * 100); // 비율로 변환
+  
+    data.tableData.forEach((row, rowIndex) => {
+      const tr = document.createElement('tr');
     
-    // 행 높이 적용
-    if (data.rowHeights[rowIndex]) {
-      tr.style.height = data.rowHeights[rowIndex] + 'px';
-    }
-
-    row.forEach((cellData, colIndex) => {
-      const td = document.createElement('td');
-
-      if (typeof cellData === 'object') {
-        td.innerHTML = cellData.text || JSON.stringify(cellData);
-      } else {
-        td.innerHTML = cellData;
+      // 행 높이 적용
+      if (data.rowHeights && data.rowHeights[rowIndex]) {
+        tr.style.height = data.rowHeights[rowIndex] + 'px';
       }
-
-      applyStyles(td, rowIndex, colIndex, data);
-
-      // 열 너비 비율 적용
-      td.style.width = columnWidths[colIndex] + '%';
-
-      // 텍스트 줄 바꿈 허용
-      td.style.whiteSpace = 'pre-wrap';
-      tr.appendChild(td);
+  
+      row.forEach((cellData, colIndex) => {
+        const td = document.createElement('td');
+  
+        if (typeof cellData === 'object') {
+          td.innerHTML = cellData.text || JSON.stringify(cellData);
+        } else {
+          td.innerHTML = cellData;
+        }
+  
+        applyStyles(td, rowIndex, colIndex, data);
+  
+        // 열 너비 비율 적용
+        if (columnWidthPercentages[colIndex]) {
+          td.style.width = columnWidthPercentages[colIndex] + '%';
+        }
+  
+        // 텍스트 줄 바꿈 허용
+        td.style.whiteSpace = 'pre-wrap';
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
     });
-    table.appendChild(tr);
-  });
+  } else {
+    // 열 너비 데이터가 없는 경우 기본적으로 테이블을 표시
+    data.tableData.forEach((row, rowIndex) => {
+      const tr = document.createElement('tr');
+  
+      // 행 높이 적용
+      if (data.rowHeights && data.rowHeights[rowIndex]) {
+        tr.style.height = data.rowHeights[rowIndex] + 'px';
+      }
+  
+      row.forEach((cellData, colIndex) => {
+        const td = document.createElement('td');
+  
+        if (typeof cellData === 'object') {
+          td.innerHTML = cellData.text || JSON.stringify(cellData);
+        } else {
+          td.innerHTML = cellData;
+        }
+  
+        applyStyles(td, rowIndex, colIndex, data);
+  
+        // 텍스트 줄 바꿈 허용
+        td.style.whiteSpace = 'pre-wrap';
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+  }
 }
 
 function applyStyles(td, rowIndex, colIndex, data) {
