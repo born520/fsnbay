@@ -1,4 +1,4 @@
-/* 기존 스타일 유지 */
+/* 테이블과 셀의 기본 스타일 */
 table {
   border-collapse: collapse;
   width: 100%;
@@ -12,32 +12,18 @@ th, td {
   padding: 0;
   text-align: center;
   vertical-align: middle;
+  white-space: pre-wrap; /* 텍스트 줄 바꿈 허용 */
 }
 
-.image-container {
-  width: 100%;
-  height: 0;
-  padding-bottom: 75%;
-  position: relative;
-  overflow: hidden;
+/* 반응형 디자인을 위한 추가 스타일 */
+@media (max-width: 768px) {
+  th, td {
+    font-size: 0.9em; /* 작은 화면에서는 글자 크기를 줄임 */
+  }
 }
 
-.image-container img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transform: translate(-50%, -50%);
-}
-
-/* 행 높이를 강제로 설정하지 않음 */
-table tr {
-  height: auto;
-}
-
-/* 기본 너비 설정 제거 */
-table td {
-  width: auto;
+@media (max-width: 480px) {
+  th, td {
+    font-size: 0.8em; /* 더 작은 화면에서는 글자 크기를 더 줄임 */
+  }
 }
