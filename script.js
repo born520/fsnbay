@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", function() {
-  fetchData();
-});
-
 async function fetchData() {
   try {
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
@@ -9,7 +5,6 @@ async function fetchData() {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const result = await response.json();
-    localStorage.setItem('sheetData', JSON.stringify(result));
     renderTable(result);
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -35,13 +30,12 @@ function renderTable(data) {
     }
   });
 
-  // rowHeights 배열이 없는 경우 기본 높이를 설정
   const rowHeights = data.rowHeights || [];
 
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
     
-    // 행 높이 적용 (rowHeights가 있을 때만)
+    // 행 높이 적용
     if (rowHeights[rowIndex]) {
       tr.style.height = rowHeights[rowIndex] + 'px';
     }
@@ -52,13 +46,12 @@ function renderTable(data) {
       if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
         const td = document.createElement('td');
 
-        // 객체인 경우 특정 속성을 추출하여 표시
         if (typeof cellData === 'object') {
           td.innerHTML = cellData.text || JSON.stringify(cellData);
         } else {
           td.innerHTML = cellData;
         }
-        
+
         applyStyles(td, rowIndex, colIndex, data);
 
         if (mergeInfo) {
