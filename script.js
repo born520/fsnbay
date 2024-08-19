@@ -43,16 +43,6 @@ function renderTable(data, isUpdate) {
   const fragment = document.createDocumentFragment();
   const columnWidths = data.columnWidths || [];
 
-  const mergeMap = {};
-  data.mergedCells.forEach(cell => {
-    for (let i = 0; i < cell.numRows; i++) {
-      for (let j = 0; j < cell.numColumns; j++) {
-        const key = `${cell.row + i}-${cell.column + j}`;
-        mergeMap[key] = { masterRow: cell.row, masterColumn: cell.column };
-      }
-    }
-  });
-
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
 
@@ -61,36 +51,20 @@ function renderTable(data, isUpdate) {
     }
 
     row.forEach((cellData, colIndex) => {
-      const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
-      const mergeInfo = mergeMap[cellKey];
+      const td = document.createElement('td');
 
-      if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
-        const td = document.createElement('td');
-
-        if (typeof cellData === 'object') {
-          td.innerHTML = cellData.richText || cellData.text || '';
-        } else {
-          td.innerHTML = cellData;
-        }
-
-        applyStyles(td, rowIndex, colIndex, data);
-
-        // 픽셀 단위로 너비 설정
-        if (columnWidths[colIndex]) {
-          td.style.width = columnWidths[colIndex] + 'px';
-        }
-
-        if (mergeInfo) {
-          const mergedCell = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn);
-          if (mergedCell) {
-            td.rowSpan = mergedCell.numRows;
-            td.colSpan = mergedCell.numColumns;
-          }
-        }
-
-        td.style.whiteSpace = 'pre-wrap';
-        tr.appendChild(td);
+      if (typeof cellData === 'object') {
+        td.innerHTML = cellData.richText || cellData.text || '';
+      } else {
+        td.innerHTML = cellData;
       }
+
+      if (columnWidths[colIndex]) {
+        td.style.width = columnWidths[colIndex] + 'px';
+      }
+
+      td.style.whiteSpace = 'pre-wrap';
+      tr.appendChild(td);
     });
 
     fragment.appendChild(tr);
