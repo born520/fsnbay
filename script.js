@@ -1,16 +1,3 @@
-async function fetchData() {
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    const result = await response.json();
-    renderTable(result);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-}
-
 function renderTable(data) {
   if (data.error) {
     console.error('Error in data:', data.error);
@@ -31,6 +18,7 @@ function renderTable(data) {
   });
 
   const rowHeights = data.rowHeights || [];
+  const columnWidths = data.columnWidths || [];
 
   data.tableData.forEach((row, rowIndex) => {
     const tr = document.createElement('tr');
@@ -53,6 +41,11 @@ function renderTable(data) {
         }
 
         applyStyles(td, rowIndex, colIndex, data);
+
+        // 열 너비 적용
+        if (columnWidths[colIndex]) {
+          td.style.width = columnWidths[colIndex] + 'px';
+        }
 
         if (mergeInfo) {
           td.rowSpan = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn).numRows;
