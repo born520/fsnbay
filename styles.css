@@ -2,7 +2,7 @@
 table {
   width: 100%; /* 테이블이 화면을 꽉 채우도록 설정 */
   border-collapse: collapse;
-  table-layout: fixed; /* 테이블 레이아웃을 고정하여 셀 너비를 일정하게 유지 */
+  table-layout: fixed; /* 셀 너비를 일정하게 유지 */
   margin: 0 auto; /* 테이블을 화면 중앙에 배치 */
 }
 
@@ -47,7 +47,7 @@ th, td {
   }
 }
 
-/* 테이블이 너무 넓을 때 세로 스크롤 가능하도록 설정 */
+/* 테이블이 너무 넓을 때 가로 스크롤 가능하도록 설정 */
 table {
   overflow-x: auto;
   display: block;
