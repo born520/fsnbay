@@ -36,3 +36,8 @@ th, td {
 table tr {
   height: auto;
 }
+
+/* 기본 너비 설정 제거 */
+table td {
+  width: auto;
+}
