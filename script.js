@@ -1,17 +1,17 @@
 async function fetchData() {
   try {
-    const cachedData = localStorage.getItem('cachedTableData');
-    if (cachedData) {
-      console.log('Using cached data');
-      renderTable(JSON.parse(cachedData), false); // 캐시된 데이터를 먼저 렌더링
-    }
+    // GitHub에서 초기 JSON 데이터 가져오기
+    const initialDataResponse = await fetch('https://raw.githubusercontent.com/your-username/your-repo/main/initial_data.json');
+    const initialData = await initialDataResponse.json();
+    console.log('Initial data loaded from GitHub');
+    renderTable(initialData, true);
 
-    // 요청에 타임아웃 설정 (20초 후 요청 중단)
+    // 서버에서 전체 데이터를 비동기적으로 가져오기
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       controller.abort();
       console.error('Request timed out after 20 seconds');
-    }, 20000); // 20초로 타임아웃 시간 설정
+    }, 20000); // 20초로 타임아웃 설정
 
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec', {
       signal: controller.signal
@@ -24,18 +24,11 @@ async function fetchData() {
     }
 
     const result = await response.json();
-    console.log('Data fetched successfully');
+    console.log('Full data fetched successfully');
 
-    // 중요한 데이터(2줄)만 먼저 렌더링
-    renderPartialTable(result, 2);
-
-    // 나머지 데이터를 비동기적으로 로드
-    setTimeout(() => {
-      renderTable(result, true);
-      localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
-      localStorage.setItem('dataHash', hashData(result.tableData)); // 데이터 해시값 저장
-      console.log('Full data rendered and cached');
-    }, 100);
+    renderTable(result, true);
+    localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
+    localStorage.setItem('dataHash', hashData(result.tableData)); // 데이터 해시값 저장
   } catch (error) {
     console.error('Error fetching data:', error);
     if (error.name === 'AbortError') {
@@ -44,24 +37,6 @@ async function fetchData() {
       document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
     }
   }
-}
-
-function renderPartialTable(data, numRows) {
-  const table = document.getElementById('data-table');
-  table.innerHTML = ''; // 기존 테이블 내용 지우기
-
-  // 중요한 데이터만 렌더링 (예: 첫 2개 행)
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < Math.min(numRows, data.tableData.length); i++) {
-    const tr = document.createElement('tr');
-    data.tableData[i].forEach(cellData => {
-      const td = document.createElement('td');
-      td.textContent = cellData.text || cellData.richText || '';
-      tr.appendChild(td);
-    });
-    fragment.appendChild(tr);
-  }
-  table.appendChild(fragment);
 }
 
 function renderTable(data, isUpdate) {
