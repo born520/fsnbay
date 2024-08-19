@@ -64,6 +64,9 @@ function renderTable(data) {
           td.rowSpan = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn).numRows;
           td.colSpan = data.mergedCells.find(cell => cell.row === mergeInfo.masterRow && cell.column === mergeInfo.masterColumn).numColumns;
         }
+
+        // 텍스트 줄 바꿈 허용
+        td.style.whiteSpace = 'pre-wrap';
         tr.appendChild(td);
       }
     });
@@ -74,8 +77,8 @@ function renderTable(data) {
 function applyStyles(td, rowIndex, colIndex, data) {
   td.style.backgroundColor = data.backgrounds[rowIndex][colIndex] || '';
   td.style.color = data.fontColors[rowIndex][colIndex] || '';
-  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'left';
-  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'top';
+  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'left';  // 가로 정렬
+  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'top'; // 세로 정렬
   td.style.fontWeight = data.fontWeights[rowIndex][colIndex] || 'normal';
   td.style.fontSize = (data.fontSizes[rowIndex][colIndex] || 12) + 'px';
 
