@@ -25,7 +25,6 @@ function renderTable(data) {
 
   const fragment = document.createDocumentFragment();
 
-  // 셀 병합을 처리하기 위한 맵 설정
   const mergeMap = {};
   if (data.mergedCells) {
     data.mergedCells.forEach(cell => {
@@ -49,7 +48,6 @@ function renderTable(data) {
       const cellKey = `${rowIndex + 1}-${colIndex + 1}`;
       const mergeInfo = mergeMap[cellKey];
 
-      // 병합된 셀 처리
       if (!mergeInfo || (mergeInfo.masterRow === rowIndex + 1 && mergeInfo.masterColumn === colIndex + 1)) {
         const td = document.createElement('td');
 
@@ -59,7 +57,6 @@ function renderTable(data) {
           td.innerHTML = cellData;
         }
 
-        // 셀 스타일 적용
         applyStyles(td, rowIndex, colIndex, data);
 
         if (data.columnWidths && data.columnWidths[colIndex]) {
@@ -85,17 +82,12 @@ function renderTable(data) {
 }
 
 function applyStyles(td, rowIndex, colIndex, data) {
-  // 스타일 적용
   td.style.backgroundColor = data.backgrounds[rowIndex][colIndex] || '';
   td.style.color = data.fontColors[rowIndex][colIndex] || '';
-  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'center';  // 가로 정렬
-  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'middle'; // 세로 정렬
+  td.style.textAlign = data.horizontalAlignments[rowIndex][colIndex] || 'center';
+  td.style.verticalAlign = data.verticalAlignments[rowIndex][colIndex] || 'middle';
   td.style.fontWeight = data.fontWeights[rowIndex][colIndex] || 'normal';
   td.style.fontSize = (data.fontSizes[rowIndex][colIndex] || 12) + 'px';
-
-  if (data.fontStyles[rowIndex][colIndex].includes('strikethrough')) {
-    td.classList.add('strikethrough');
-  }
 }
 
 // 페이지가 로드될 때 데이터를 가져옴
