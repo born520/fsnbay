@@ -9,15 +9,15 @@ table, th, td {
 }
 
 th, td {
-  padding: 0; /* 셀 패딩 제거 */
-  text-align: center; /* 텍스트 가운데 정렬 */
-  vertical-align: middle; /* 수직 가운데 정렬 */
+  padding: 0;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .image-container {
-  width: 100%; /* 셀 전체 너비 사용 */
+  width: 100%;
   height: 0;
-  padding-bottom: 75%; /* 4:3 비율을 유지하기 위한 패딩 */
+  padding-bottom: 75%;
   position: relative;
   overflow: hidden;
 }
@@ -28,16 +28,11 @@ th, td {
   left: 50%;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* 이미지가 셀을 넘지 않고 비율을 유지하도록 */
+  object-fit: contain;
   transform: translate(-50%, -50%);
 }
 
-/* 취소선 스타일 */
-.strikethrough {
-  text-decoration: line-through;
-}
-
-/* 추가된 스타일: 모든 테이블 행의 높이를 강제로 설정 */
+/* 행 높이를 강제로 설정하지 않음 */
 table tr {
-  height: auto !important;
+  height: auto;
 }
