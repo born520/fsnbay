@@ -1,52 +1,92 @@
 /* 기본 테이블 스타일 */
 table {
-  width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
-  margin: 0 auto;
+  width: 100%;
+  table-layout: fixed; /* 셀 너비를 고정시키는 속성 */
+}
+
+/* 테이블의 테두리 및 기본 스타일 */
+table, th, td {
+  border: 1px solid black;
 }
 
 th, td {
-  border: 1px solid black;
-  white-space: pre-wrap;
-  overflow: hidden;
+  padding: 8px;
   text-align: center;
   vertical-align: middle;
-  padding: 12px;
-  font-size: 1em;
+  white-space: pre-wrap; /* 텍스트 줄 바꿈 허용 */
 }
 
-/* 큰 화면에서의 스타일 */
-@media (min-width: 1024px) {
-  table {
-    width: 100%;
-  }
+/* 기본적인 텍스트 스타일 */
+th, td {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
 }
 
-/* 중간 화면 (태블릿 등) */
-@media (max-width: 1024px) and (min-width: 768px) {
-  th, td {
-    font-size: 0.9em; /* 글자 크기 약간 줄임 */
-    padding: 8px;
-  }
+/* 색상 및 배경색 스타일링 */
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
 }
 
-/* 작은 화면 (모바일) */
+td {
+  background-color: #ffffff;
+}
+
+/* 반응형 디자인을 위한 추가 스타일 */
 @media (max-width: 768px) {
   th, td {
-    font-size: 0.8em; /* 글자 크기 더 줄임 */
+    font-size: 12px;
     padding: 6px;
   }
+}
 
-  /* 화면이 좁을 때 특정 열 숨기기 */
-  th.hide-on-mobile, td.hide-on-mobile {
-    display: none;
+@media (max-width: 480px) {
+  th, td {
+    font-size: 10px;
+    padding: 4px;
   }
+}
 
-  /* 모바일에서 스크롤 가능하도록 설정 */
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap; /* 모바일에서 테이블 줄바꿈을 방지 */
-  }
+/* 머지된 셀을 표시할 때 스타일 */
+td[rowspan], td[colspan] {
+  vertical-align: top;
+}
+
+/* 커스터마이징을 위한 추가 스타일 */
+.strikethrough {
+  text-decoration: line-through;
+}
+
+/* 폰트 스타일 및 정렬 관련 설정 */
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* 추가적인 테이블 스타일 */
+#data-table {
+  margin: 20px 0;
+  width: 100%;
+}
+
+/* 특정 색상에 대한 스타일 */
+.bg-gray {
+  background-color: #f4f4f4;
+}
+
+.bg-blue {
+  background-color: #cce5ff;
+}
+
+.bg-yellow {
+  background-color: #fff3cd;
+}
+
+.text-red {
+  color: #ff0000;
 }
