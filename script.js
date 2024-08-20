@@ -1,67 +1,30 @@
 async function fetchData() {
   try {
-    const cachedData = localStorage.getItem('cachedTableData');
-    if (cachedData) {
-      console.log('Using cached data');
-      renderTable(JSON.parse(cachedData), false); // 캐시된 데이터를 먼저 렌더링
-    }
+    // 기존에 서버에서 데이터를 가져오는 부분이 있었다면 여기에 포함되었을 것입니다.
+    // 이 부분을 제거하거나 유지하고, 대신 정적 데이터를 먼저 로드합니다.
 
-    // 요청에 타임아웃 설정 (20초 후 요청 중단)
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-      console.error('Request timed out after 20 seconds');
-    }, 20000); // 20초로 타임아웃 시간 설정
+    // 정적 데이터 로드
+    renderTable(tableData, true); // data.js 파일에서 로드된 정적 데이터 사용
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec', {
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId); // 요청이 완료되면 타임아웃 제거
-
+    // 기존의 서버 요청을 그대로 유지할 수 있습니다.
+    // 예시: 서버에서 전체 데이터를 비동기적으로 가져오기
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Data fetched successfully');
+    console.log('Full data fetched successfully');
 
-    // 중요한 데이터(2줄)만 먼저 렌더링
-    renderPartialTable(result, 2);
+    // 서버에서 가져온 전체 데이터를 다시 렌더링
+    renderTable(result, true);
+    localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
+    localStorage.setItem('dataHash', hashData(result.tableData)); // 데이터 해시값 저장
 
-    // 나머지 데이터를 비동기적으로 로드
-    setTimeout(() => {
-      renderTable(result, true);
-      localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
-      localStorage.setItem('dataHash', hashData(result.tableData)); // 데이터 해시값 저장
-      console.log('Full data rendered and cached');
-    }, 100);
   } catch (error) {
     console.error('Error fetching data:', error);
-    if (error.name === 'AbortError') {
-      document.getElementById('data-table').innerHTML = "<tr><td>Request timed out. Please try again later.</td></tr>";
-    } else {
-      document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
-    }
+    document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
   }
-}
-
-function renderPartialTable(data, numRows) {
-  const table = document.getElementById('data-table');
-  table.innerHTML = ''; // 기존 테이블 내용 지우기
-
-  // 중요한 데이터만 렌더링 (예: 첫 2개 행)
-  const fragment = document.createDocumentFragment();
-  for (let i = 0; i < Math.min(numRows, data.tableData.length); i++) {
-    const tr = document.createElement('tr');
-    data.tableData[i].forEach(cellData => {
-      const td = document.createElement('td');
-      td.textContent = cellData.text || cellData.richText || '';
-      tr.appendChild(td);
-    });
-    fragment.appendChild(tr);
-  }
-  table.appendChild(fragment);
 }
 
 function renderTable(data, isUpdate) {
