@@ -7,16 +7,10 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="loading">Loading data, please wait...</div>
-  <table id="data-table" style="display:none;"></table>
+  <table id="data-table"></table>
   <script src="script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchData().finally(() => {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('data-table').style.display = 'table';
-      });
-    });
+    document.addEventListener('DOMContentLoaded', fetchData);
   </script>
 </body>
 </html>
