@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Static Data Table</title>
-  <script src="data.js"></script> <!-- 정적 데이터 파일 로드 -->
-  <script src="script.js"></script> <!-- 테이블 렌더링을 위한 스크립트 -->
+  <title>Google Sheets Data</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <table id="data-table"></table>
-
+  <script src="script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      renderTable(tableData, true); // 정적 데이터 로드
-    });
+    document.addEventListener('DOMContentLoaded', fetchData);
   </script>
 </body>
 </html>
