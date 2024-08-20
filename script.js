@@ -15,7 +15,7 @@ async function fetchData() {
 
     renderTable(result, true);
     localStorage.setItem('cachedTableData', JSON.stringify(result));
-    localStorage.setItem('dataHash', hashData(result.tableData)); // hashData 함수 사용
+    localStorage.setItem('dataHash', hashData(result.tableData));
   } catch (error) {
     console.error('Error fetching data:', error);
     document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
@@ -23,7 +23,6 @@ async function fetchData() {
 }
 
 function hashData(data) {
-  // 데이터를 간단히 해시하는 함수 - 이 함수가 제대로 정의되어야 합니다.
   return JSON.stringify(data).length;
 }
 
