@@ -23,7 +23,8 @@ async function fetchData() {
 }
 
 function hashData(data) {
-  return JSON.stringify(data).length; // 데이터를 해시하는 간단한 함수
+  // 데이터를 간단히 해시하는 함수 - 이 함수가 제대로 정의되어야 합니다.
+  return JSON.stringify(data).length;
 }
 
 function renderTable(data, isUpdate) {
