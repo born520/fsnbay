@@ -1,13 +1,10 @@
 async function fetchData() {
   try {
-    // 기존에 서버에서 데이터를 가져오는 부분이 있었다면 여기에 포함되었을 것입니다.
-    // 이 부분을 제거하거나 유지하고, 대신 정적 데이터를 먼저 로드합니다.
+    const cachedData = localStorage.getItem('cachedTableData');
+    if (cachedData) {
+      renderTable(JSON.parse(cachedData), false);
+    }
 
-    // 정적 데이터 로드
-    renderTable(tableData, true); // data.js 파일에서 로드된 정적 데이터 사용
-
-    // 기존의 서버 요청을 그대로 유지할 수 있습니다.
-    // 예시: 서버에서 전체 데이터를 비동기적으로 가져오기
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -16,11 +13,9 @@ async function fetchData() {
     const result = await response.json();
     console.log('Full data fetched successfully');
 
-    // 서버에서 가져온 전체 데이터를 다시 렌더링
     renderTable(result, true);
-    localStorage.setItem('cachedTableData', JSON.stringify(result)); // 데이터를 로컬 저장소에 캐시
-    localStorage.setItem('dataHash', hashData(result.tableData)); // 데이터 해시값 저장
-
+    localStorage.setItem('cachedTableData', JSON.stringify(result));
+    localStorage.setItem('dataHash', hashData(result.tableData));
   } catch (error) {
     console.error('Error fetching data:', error);
     document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
@@ -36,7 +31,7 @@ function renderTable(data, isUpdate) {
 
   if (isUpdate) {
     const table = document.getElementById('data-table');
-    table.innerHTML = ''; // 기존 테이블 내용 지우기
+    table.innerHTML = '';
   }
 
   const fragment = document.createDocumentFragment();
@@ -86,6 +81,7 @@ function renderTable(data, isUpdate) {
           }
         }
 
+        td.style.whiteSpace = 'pre-wrap';
         tr.appendChild(td);
       }
     });
@@ -105,5 +101,4 @@ function applyStyles(td, rowIndex, colIndex, data) {
   td.style.fontSize = (data.fontSizes[rowIndex][colIndex] || 12) + 'px';
 }
 
-// 페이지가 로드될 때 데이터를 가져옴
 document.addEventListener('DOMContentLoaded', fetchData);
