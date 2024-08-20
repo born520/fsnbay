@@ -3,6 +3,7 @@ table {
   border-collapse: collapse;
   width: 100%;
   table-layout: auto; /* 반응형을 위해 auto로 변경 */
+  word-wrap: break-word; /* 긴 단어가 줄 바꿈되도록 설정 */
 }
 
 /* 테이블의 테두리 및 기본 스타일 */
