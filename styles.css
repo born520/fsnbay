@@ -2,7 +2,7 @@
 table {
   border-collapse: collapse;
   width: 100%;
-  table-layout: auto; /* 반응형을 위해 auto로 변경 */
+  table-layout: auto; /* 반응형을 위해 auto로 설정 */
   word-wrap: break-word; /* 긴 단어가 줄 바꿈되도록 설정 */
 }
 
@@ -16,10 +16,6 @@ th, td {
   text-align: center;
   vertical-align: middle;
   white-space: pre-wrap; /* 텍스트 줄 바꿈 허용 */
-}
-
-/* 기본적인 텍스트 스타일 */
-th, td {
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: #333;
@@ -103,4 +99,12 @@ td[rowspan], td[colspan] {
 
 .text-red {
   color: #ff0000;
+}
+
+/* 로딩 인디케이터 스타일 */
+#loading-indicator {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
 }
