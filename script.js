@@ -1,10 +1,14 @@
 async function fetchData() {
   try {
+    // 로컬 스토리지에서 캐시된 데이터를 가져오기
     const cachedData = localStorage.getItem('cachedTableData');
     if (cachedData) {
       renderTable(JSON.parse(cachedData), false);
+      document.getElementById('loading-indicator').style.display = 'none';
+      document.getElementById('data-table').style.display = '';
     }
 
+    // Google Sheets 데이터를 비동기적으로 가져오기
     const response = await fetch('https://script.google.com/macros/s/AKfycbwJh55eAwKMubOUmq0N0NtIZ83N4EthpC4hC_QNKwpx2vF8PyLrm05ffwgLYfTSxSA/exec');
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -13,9 +17,15 @@ async function fetchData() {
     const result = await response.json();
     console.log('Full data fetched successfully');
 
+    // 새로운 데이터를 테이블에 렌더링
     renderTable(result, true);
+    
+    // 로컬 스토리지에 데이터를 저장하여 캐싱
     localStorage.setItem('cachedTableData', JSON.stringify(result));
     localStorage.setItem('dataHash', hashData(result.tableData));
+
+    document.getElementById('loading-indicator').style.display = 'none';
+    document.getElementById('data-table').style.display = '';
   } catch (error) {
     console.error('Error fetching data:', error);
     document.getElementById('data-table').innerHTML = "<tr><td>Error fetching data. Please try again later.</td></tr>";
