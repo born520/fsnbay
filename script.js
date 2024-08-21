@@ -15,14 +15,15 @@ async function fetchData() {
     }
 
     const result = await response.json();
-    console.log('Full data fetched successfully');
 
-    // 새로운 데이터를 테이블에 렌더링
-    renderTable(result, true);
-    
-    // 로컬 스토리지에 데이터를 저장하여 캐싱
-    localStorage.setItem('cachedTableData', JSON.stringify(result));
-    localStorage.setItem('dataHash', hashData(result.tableData));
+    // 데이터 변경 여부 확인 후 업데이트
+    const currentHash = hashData(result.tableData);
+    const previousHash = localStorage.getItem('dataHash');
+    if (currentHash !== previousHash) {
+      renderTable(result, true);
+      localStorage.setItem('cachedTableData', JSON.stringify(result));
+      localStorage.setItem('dataHash', currentHash);
+    }
 
     document.getElementById('loading-indicator').style.display = 'none';
     document.getElementById('data-table').style.display = '';
